@@ -20,6 +20,4 @@ do
    i=$((i * 2))
 done
 
-echo "points_${i}"
 ./plot.py
-#rm *.csv
