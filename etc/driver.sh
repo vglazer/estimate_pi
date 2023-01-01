@@ -8,6 +8,17 @@ script_name=$(basename "${script_path}")
 
 [[ $# -ne 2 ]] && { echo "usage: ${script_name} <num_threads> <max_num_points>"; exit 1; }
 
+build_dir="build/Release"
+build_dir_path=$(realpath "${script_dir}/../${build_dir}")
+echo "Cleaning up ${build_dir_path}..."
+rm -rf "${build_dir_path}"
+variant="Release"
+generator="Ninja"
+echo "Generating build files..."
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING="${variant}" -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/clang++ -S "${script_dir}/.." -B "${build_dir_path}" -G "${generator}"
+echo "Building using ${generator}..."
+cmake --build "${build_dir_path}"
+
 max_num_points=$2
 min_num_points=1000 # dividisble by 8
 [[ ${max_num_points} -lt ${min_num_points}  ]] && { echo "use at least ${min_num_points} points"; exit 1; }
